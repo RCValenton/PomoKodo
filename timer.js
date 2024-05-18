@@ -20,7 +20,7 @@ const COLOR_CODES = {
   }
 };
 
-// Defining variables that are limited at the scope of a block statement, or expresion on which it is used
+// Defining variables that are limited at the scope of a block statement, or expression on which it is used
 let TIME_LIMIT = null;
 let timePassed = 0;
 let timeLeft = TIME_LIMIT;
@@ -65,17 +65,23 @@ function onTimesUp() {
 }
 
 // Defining a function that starts the timer
-function startTimer() {
-  TIME_LIMIT = 1800;
+function startTimer(duration) {
+  onTimesUp(); // Reset any existing timer
+  TIME_LIMIT = duration;
+  timePassed = 0;
+  timeLeft = TIME_LIMIT;
+  remainingPathColor = COLOR_CODES.info.color;
+  document.getElementById("base-timer-label").innerHTML = formatTime(timeLeft); // Initialize the label with the correct time
+  setCircleDasharray();
+  setRemainingPathColor(timeLeft);
+
   // setInterval is a built-in function that is used to set a delay
   // You can cancel the interval using clearInterval()
   timerInterval = setInterval(() => {
     // Timer logic
-    timePassed = timePassed += 1;
+    timePassed += 1;
     timeLeft = TIME_LIMIT - timePassed;
-    document.getElementById("base-timer-label").innerHTML = formatTime(
-      timeLeft
-    );
+    document.getElementById("base-timer-label").innerHTML = formatTime(timeLeft);
     setCircleDasharray();
     setRemainingPathColor(timeLeft);
 
@@ -85,85 +91,12 @@ function startTimer() {
   }, 1000);
 }
 
-function startMediumTimer() {
-  TIME_LIMIT = 3000;
-  // setInterval is a built-in function that is used to set a delay
-  // You can cancel the interval using clearInterval()
-  timerInterval = setInterval(() => {
-    // Timer logic
-    timePassed = timePassed += 1;
-    timeLeft = TIME_LIMIT - timePassed;
-    document.getElementById("base-timer-label").innerHTML = formatTime(
-      timeLeft
-    );
-    setCircleDasharray();
-    setRemainingPathColor(timeLeft);
-
-    if (timeLeft === 0) {
-      onTimesUp();
-    }
-  }, 1000);
-}
-
-function startHardTimer() {
-  TIME_LIMIT = 4200;
-  // setInterval is a built-in function that is used to set a delay
-  // You can cancel the interval using clearInterval()
-  timerInterval = setInterval(() => {
-    // Timer logic
-    timePassed = timePassed += 1;
-    timeLeft = TIME_LIMIT - timePassed;
-    document.getElementById("base-timer-label").innerHTML = formatTime(
-      timeLeft
-    );
-    setCircleDasharray();
-    setRemainingPathColor(timeLeft);
-
-    if (timeLeft === 0) {
-      onTimesUp();
-    }
-  }, 1000);
-}
-
-function startBreakTimer() {
-  TIME_LIMIT = 900;
-  // setInterval is a built-in function that is used to set a delay
-  // You can cancel the interval using clearInterval()
-  timerInterval = setInterval(() => {
-    // Timer logic
-    timePassed = timePassed += 1;
-    timeLeft = TIME_LIMIT - timePassed;
-    document.getElementById("base-timer-label").innerHTML = formatTime(
-      timeLeft
-    );
-    setCircleDasharray();
-    setRemainingPathColor(timeLeft);
-
-    if (timeLeft === 0) {
-      onTimesUp();
-    }
-  }, 1000);
-}
-
-function startStudyTimer() {
-  TIME_LIMIT = 7200;
-  // setInterval is a built-in function that is used to set a delay
-  // You can cancel the interval using clearInterval()
-  timerInterval = setInterval(() => {
-    // Timer logic
-    timePassed = timePassed += 1;
-    timeLeft = TIME_LIMIT - timePassed;
-    document.getElementById("base-timer-label").innerHTML = formatTime(
-      timeLeft
-    );
-    setCircleDasharray();
-    setRemainingPathColor(timeLeft);
-
-    if (timeLeft === 0) {
-      onTimesUp();
-    }
-  }, 1000);
-}
+// Timer Start Functions
+function startEasyTimer() { startTimer(1800); }
+function startMediumTimer() { startTimer(3000); }
+function startHardTimer() { startTimer(4200); }
+function startBreakTimer() { startTimer(900); }
+function startStudyTimer() { startTimer(7200); }
 
 function formatTime(time) {
   // The largest round integer less than or equal to the result of time divided being by 60.
@@ -184,22 +117,15 @@ function formatTime(time) {
 // Creating a function that defines the timer color based on how much time left
 function setRemainingPathColor(timeLeft) {
   const { alert, warning, info } = COLOR_CODES;
+  const path = document.getElementById("base-timer-path-remaining");
   // If the remaining time is less than or equal to 5, remove the "warning" class and apply the "alert" class.
   if (timeLeft <= alert.threshold) {
-    document
-      .getElementById("base-timer-path-remaining")
-      .classList.remove(warning.color);
-    document
-      .getElementById("base-timer-path-remaining")
-      .classList.add(alert.color);
+    path.classList.remove(warning.color);
+    path.classList.add(alert.color);
   // If the remaining time is less than or equal to 10, remove the base color and apply the "warning" class.
   } else if (timeLeft <= warning.threshold) {
-    document
-      .getElementById("base-timer-path-remaining")
-      .classList.remove(info.color);
-    document
-      .getElementById("base-timer-path-remaining")
-      .classList.add(warning.color);
+    path.classList.remove(info.color);
+    path.classList.add(warning.color);
   }
 }
 
